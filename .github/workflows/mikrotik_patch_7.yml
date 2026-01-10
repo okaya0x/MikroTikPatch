@@ -191,26 +191,18 @@ jobs:
         sudo mksquashfs option-root option.sfs -quiet -comp xz -no-xattrs -b 256k
         sudo rm -rf option-root
         if [ "${{ matrix.arch }}" == "x86" ]; then
-          sudo wget -O cpython.tar.zst -nv https://github.com/astral-sh/python-build-standalone/releases/download/20251217/cpython-3.11.14+20251217-x86_64-unknown-linux-musl-lto+static-full.tar.zst
-          sudo tar -xf cpython.tar.zst
-          sudo rm cpython.tar.zst
-          sudo rm -rf ./python/build
-          sudo rm -rf ./python/install/include
-          sudo rm -rf ./python/install/share
-          sudo ln -s /pckg/python3/install/bin ./python/bin
-          sudo mksquashfs python python3.sfs -quiet -comp xz -no-xattrs -b 256k
-          sudo rm -rf ./python
-        #elif [ "${{ matrix.arch }}" == "arm64" ]; then
-        #  sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20251217/cpython-3.11.14+20251217-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
-        #elif [ "${{ matrix.arch }}" == "arm" ]; then
-        #  sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20251217/cpython-3.11.14+20251217-armv7-unknown-linux-gnueabi-install_only_stripped.tar.gz
+          sudo wget -O cpython.tar.zst -nv https://github.com/astral-sh/python-build-standalone/releases/download/20241206/cpython-3.11.11+20241206-x86_64-unknown-linux-musl-install_only_stripped.tar.gz
+        elif [ "${{ matrix.arch }}" == "arm64" ]; then
+          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20241206/cpython-3.11.11+20241206-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
+        elif [ "${{ matrix.arch }}" == "arm" ]; then
+          sudo wget -O cpython.tar.gz -nv https://github.com/indygreg/python-build-standalone/releases/download/20241206/cpython-3.11.11+20241206-armv7-unknown-linux-gnueabi-install_only_stripped.tar.gz
         fi
-        #sudo tar -xf cpython.tar.gz
-        #sudo rm cpython.tar.gz
-        #sudo rm -rf ./python/include
-        #sudo rm -rf ./python/share
-        #sudo mksquashfs python python3.sfs -quiet -comp xz -no-xattrs -b 256k
-        #sudo rm -rf ./python
+        sudo tar -xf cpython.tar.gz
+        sudo rm cpython.tar.gz
+        sudo rm -rf ./python/include
+        sudo rm -rf ./python/share
+        sudo mksquashfs python python3.sfs -quiet -comp xz -no-xattrs -b 256k
+        sudo rm -rf ./python
 
     - name: Cache mikrotik-${{ env.LATEST_VERSION }}${{ env.ARCH }}.iso
       if: steps.get_latest.outputs.has_new_version == 'true'  && (matrix.arch == 'x86' || matrix.arch == 'arm64')
@@ -423,7 +415,7 @@ jobs:
             </VirtualHardwareSection>
             <AnnotationSection ovf:required="false">
               <Info>A human-readable annotation</Info>
-              <Annotation>MikroTik RouterOS CHR v7.19.4</Annotation>
+              <Annotation>MikroTik RouterOS CHR</Annotation>
             </AnnotationSection>
           </VirtualSystem>
         </Envelope>' 
